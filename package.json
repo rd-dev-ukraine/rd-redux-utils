@@ -13,5 +13,9 @@
     "prettier": "^1.15.2",
     "redux": "^4.0.1",
     "typescript": "^3.1.6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rd-dev-ukraine/rd-redux-utils.git"
   }
 }
