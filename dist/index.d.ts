@@ -1,2 +1,2 @@
-export declare const version = 1;
+export * from "./defineAction";
 //# sourceMappingURL=index.d.ts.map
