@@ -1,0 +1,17 @@
+{
+  "name": "rd-redux-utils",
+  "version": "1.0.0",
+  "description": "A set of redux action and reducer utils powered by typescript",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "author": "Sergii Tokariev",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/redux": "^3.6.0",
+    "prettier": "^1.15.2",
+    "redux": "^4.0.1",
+    "typescript": "^3.1.6"
+  }
+}
