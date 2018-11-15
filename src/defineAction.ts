@@ -2,10 +2,6 @@ import { Action } from "redux";
 import { composeActionType } from "./actionTypeUtils";
 
 export function defineAction<TActionData>(type: string): ActionCreatorFn<TActionData> {
-    if (!type) {
-        throw new Error("Action type is not defined.");
-    }
-
     const actionType = composeActionType(type);
     const result: ActionCreatorFn<TActionData> = ((data: TActionData) => ({
         ...(data as any),
@@ -34,8 +30,8 @@ export interface ActionCreatorFn<TActionData> {
     TYPE: string;
 
     /** An object which properties could be used in typeof expression. */
-    typeOf: {
+    readonly typeOf: {
         /** typeof returns a type of the action produced by the action creator. */
-        action: TActionData & Action;
+        readonly action: TActionData & Action;
     };
 }

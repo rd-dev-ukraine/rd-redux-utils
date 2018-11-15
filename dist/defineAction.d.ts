@@ -10,9 +10,9 @@ export interface ActionCreatorFn<TActionData> {
     /** Returns type string for the action. */
     TYPE: string;
     /** An object which properties could be used in typeof expression. */
-    typeOf: {
+    readonly typeOf: {
         /** typeof returns a type of the action produced by the action creator. */
-        action: TActionData & Action;
+        readonly action: TActionData & Action;
     };
 }
 //# sourceMappingURL=defineAction.d.ts.map

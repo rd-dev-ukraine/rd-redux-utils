@@ -13,9 +13,6 @@ var __assign = (this && this.__assign) || function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var actionTypeUtils_1 = require("./actionTypeUtils");
 function defineAction(type) {
-    if (!type) {
-        throw new Error("Action type is not defined.");
-    }
     var actionType = actionTypeUtils_1.composeActionType(type);
     var result = (function (data) { return (__assign({}, data, { type: actionType })); });
     result.is = function (action) {

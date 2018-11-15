@@ -1,1 +1,1 @@
-{"version":3,"file":"defineActionGroup.js","sourceRoot":"","sources":["../src/defineActionGroup.ts"],"names":[],"mappings":";;AAGA,SAAgB,iBAAiB,CAAe,WAAmB;IAC/D,MAAM,IAAI,KAAK,EAAE,CAAC;AACtB,CAAC;AAFD,8CAEC"}
+{"version":3,"file":"defineActionGroup.js","sourceRoot":"","sources":["../src/defineActionGroup.ts"],"names":[],"mappings":";;AAEA,qDAAoD;AAEpD,SAAgB,iBAAiB,CAAe,UAAkB;IAC9D,OAAO,IAAI,iCAAe,CAAsB,UAAU,CAAC,CAAC;AAChE,CAAC;AAFD,8CAEC"}
