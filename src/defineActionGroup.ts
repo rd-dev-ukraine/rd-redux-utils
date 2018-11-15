@@ -15,9 +15,13 @@ export interface ActionGroup<TCommonProps, TExtraActions extends Action = never>
      */
     defineAction<TProps>(type: string): ActionCreatorFn<TCommonProps & TProps>;
 
-    /** Checks if action belongs to the action group. */
-    is(action?: Action): action is (TCommonProps & Action) | TExtraActions;
+    /** Checks if action belongs to the action group or child groups. */
+    isGroupAction(action?: Action): action is (TCommonProps & Action) | TExtraActions;
 
+    /** Check if action belongs to exactly this group but not child groups */
+    isExactlyGroupAction(action?: Action): action is (TCommonProps & Action) | TExtraActions;
+
+    /** Tries to get data from the actions of this group or included actions. */
     tryExtractData(action?: Action): TCommonProps | undefined;
 
     /**
