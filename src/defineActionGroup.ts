@@ -9,19 +9,21 @@ export function defineActionGroup<TCommonProps>(typePrefix: string): ActionGroup
  * Action group creates a factory which allows
  * to define action creators with common properties.
  */
-export interface ActionGroup<TCommonProps> {
+export interface ActionGroup<TCommonProps, TExtraActions extends Action = never> {
     /**
      * Defines action creators which generates actions recognized by this group.
      */
     defineAction<TProps>(type: string): ActionCreatorFn<TCommonProps & TProps>;
 
     /** Checks if action belongs to the action group. */
-    is(action?: Action): action is TCommonProps & Action;
+    is(action?: Action): action is (TCommonProps & Action) | TExtraActions;
+
+    tryExtractData(action?: Action): TCommonProps | undefined;
 
     /**
      * Defines nested action group.
      */
-    defineActionGroup<TNestedProps>(typePrefix: string): ActionGroup<TCommonProps & TNestedProps>;
+    defineActionGroup<TNestedProps>(typePrefix: string): ActionGroup<TCommonProps & TNestedProps, TExtraActions>;
 
     /**
      * Adds a custom action to a group.
@@ -31,5 +33,5 @@ export interface ActionGroup<TCommonProps> {
     includeAction<TAction extends Action>(
         test: (action: Action) => action is TAction,
         extractProps: (action: TAction) => TCommonProps
-    ): ActionGroup<TCommonProps>;
+    ): ActionGroup<TCommonProps, TExtraActions | TAction>;
 }
