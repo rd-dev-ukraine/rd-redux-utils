@@ -71,8 +71,52 @@ describe("defineActionGroup", () => {
 
                 const action = myAction({ key: "a", childId: "1", value: 100 });
 
-                group.isGroupAction(action).should.be.true();
-                group.isExactlyGroupAction(action).should.be.false();
+                group.isGroupAction(action).should.be.true("Group didn't recognize child group's action.");
+                group
+                    .isExactlyGroupAction(action)
+                    .should.be.false("Group incorrectly recognized child action as exactly own action.");
+            });
+
+            it("parent should recognize actions of grand child groups", () => {
+                const group = defineActionGroup<{ key: string }>("PARENT");
+                const grandChildGroup = group
+                    .defineActionGroup<{ childId: string }>("CHILD")
+                    .defineActionGroup<{ grandChildId: number }>("GRAND CHILD");
+
+                const myAction = grandChildGroup.defineAction<{ value: number }>("MY ACTION");
+
+                const action = myAction({ key: "a", childId: "1", grandChildId: 100, value: 100 });
+
+                console.log(group.TYPE_PREFIX);
+                console.log(grandChildGroup.TYPE_PREFIX);
+                console.log(myAction.TYPE);
+
+                group.isGroupAction(action).should.be.true("Group didn't recognize grand child group's action.");
+                group
+                    .isExactlyGroupAction(action)
+                    .should.be.false("Group incorrectly recognized grand child action as exactly own action.");
+            });
+
+            it("grand child should not recognize actions of parent groups", () => {
+                const group = defineActionGroup<{ key: string }>("PARENT");
+                const grandChildGroup = group
+                    .defineActionGroup<{ childId: string }>("CHILD")
+                    .defineActionGroup<{ grandChildId: number }>("GRAND CHILD");
+
+                const myAction = group.defineAction<{ value: number }>("MY ACTION");
+
+                const action = myAction({ key: "a", value: 100 });
+
+                console.log(group.TYPE_PREFIX);
+                console.log(grandChildGroup.TYPE_PREFIX);
+                console.log(myAction.TYPE);
+
+                grandChildGroup
+                    .isGroupAction(action)
+                    .should.be.false("Grand child group incorrectly recognized grand parent action.");
+                grandChildGroup
+                    .isExactlyGroupAction(action)
+                    .should.be.false("Grand child group incorrectly recognized grand parent action.");
             });
 
             it("child should not recognize actions of child groups", () => {
@@ -124,7 +168,7 @@ describe("defineActionGroup", () => {
                 const group = defineActionGroup<{ key: string }>("TEST GROUP");
                 const myAction = group.defineAction<{ id: number }>("MY ACTION");
 
-                group.tryExtractData(myAction({ key: "a", id: 1 }))!.should.be.eql({
+                group.tryExtractData(myAction({ key: "a", id: 1 }))!.should.containDeep({
                     key: "a"
                 });
             });
@@ -136,7 +180,7 @@ describe("defineActionGroup", () => {
                     key: `${a.id}`
                 }));
 
-                group.tryExtractData(myAction({ id: 1 }))!.should.be.eql({ key: "1" });
+                group.tryExtractData(myAction({ id: 1 }))!.should.containDeep({ key: "1" });
             });
         });
 

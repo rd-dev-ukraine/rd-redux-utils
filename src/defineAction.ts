@@ -1,20 +1,8 @@
 import { Action } from "redux";
-import { composeActionType } from "./actionTypeUtils";
+import { composeActionType, validateActionType } from "./actionTypeUtils";
 
 export function defineAction<TActionData>(type: string): ActionCreatorFn<TActionData> {
-    const actionType = composeActionType(type);
-    const result: ActionCreatorFn<TActionData> = ((data: TActionData) => ({
-        ...(data as any),
-        type: actionType
-    })) as any;
-
-    result.is = function(action?: Action): action is TActionData & Action {
-        return !!action && action.type === actionType;
-    };
-
-    result.TYPE = actionType;
-
-    return result;
+    return defineActionCore(type);
 }
 
 export interface ActionCreatorFn<TActionData> {
@@ -34,4 +22,22 @@ export interface ActionCreatorFn<TActionData> {
         /** typeof returns a type of the action produced by the action creator. */
         readonly action: TActionData & Action;
     };
+}
+
+export function defineActionCore<TActionData>(type: string, prefix?: string): ActionCreatorFn<TActionData> {
+    validateActionType(type);
+
+    const actionType = composeActionType(type, prefix);
+    const result: ActionCreatorFn<TActionData> = ((data: TActionData) => ({
+        ...(data as any),
+        type: actionType
+    })) as any;
+
+    result.is = function(action?: Action): action is TActionData & Action {
+        return !!action && action.type === actionType;
+    };
+
+    result.TYPE = actionType;
+
+    return result;
 }

@@ -13,7 +13,12 @@ var __assign = (this && this.__assign) || function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var actionTypeUtils_1 = require("./actionTypeUtils");
 function defineAction(type) {
-    var actionType = actionTypeUtils_1.composeActionType(type);
+    return defineActionCore(type);
+}
+exports.defineAction = defineAction;
+function defineActionCore(type, prefix) {
+    actionTypeUtils_1.validateActionType(type);
+    var actionType = actionTypeUtils_1.composeActionType(type, prefix);
     var result = (function (data) { return (__assign({}, data, { type: actionType })); });
     result.is = function (action) {
         return !!action && action.type === actionType;
@@ -21,5 +26,5 @@ function defineAction(type) {
     result.TYPE = actionType;
     return result;
 }
-exports.defineAction = defineAction;
+exports.defineActionCore = defineActionCore;
 //# sourceMappingURL=defineAction.js.map

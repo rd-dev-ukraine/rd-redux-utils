@@ -15,4 +15,5 @@ export interface ActionCreatorFn<TActionData> {
         readonly action: TActionData & Action;
     };
 }
+export declare function defineActionCore<TActionData>(type: string, prefix?: string): ActionCreatorFn<TActionData>;
 //# sourceMappingURL=defineAction.d.ts.map

@@ -6,12 +6,13 @@ export declare class ActionGroupImpl<TCommonProps, TExtraActions extends Action>
     private includedActions;
     private childGroups;
     constructor(typePrefix: string, parent?: ActionGroup<any, any>);
-    readonly TYPE_PREFIX: string;
+    TYPE_PREFIX: string;
     defineAction: <TProps>(type: string) => ActionCreatorFn<TCommonProps & TProps>;
     isGroupAction: (action?: Action<any> | undefined) => action is TExtraActions | (TCommonProps & Action<any>);
     isExactlyGroupAction: (action?: Action<any> | undefined) => action is TExtraActions | (TCommonProps & Action<any>);
-    tryExtractData: (_action?: Action<any> | undefined) => TCommonProps;
+    tryExtractData: (action?: Action<any> | undefined) => TCommonProps | undefined;
     defineActionGroup: <TNestedProps>(typePrefix: string) => ActionGroup<TCommonProps & TNestedProps, TExtraActions>;
     includeAction: <TAction extends Action<any>>(test: (action: Action<any>) => action is TAction, extractProps: (action: TAction) => TCommonProps) => ActionGroup<TCommonProps, TExtraActions | TAction>;
+    private isOwnAction;
 }
 //# sourceMappingURL=ActionGroupImpl.d.ts.map
