@@ -3,7 +3,6 @@ import "should";
 
 import { defineActionGroup, defineAction } from "../src";
 import { equal } from "should";
-// import { Action } from "redux";
 
 describe("defineActionGroup", () => {
     it("should be possible to create action group", () => {
