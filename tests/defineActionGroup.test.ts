@@ -161,7 +161,7 @@ describe("defineActionGroup", () => {
 
                 const data = parent.tryExtractData(action);
 
-                data.should.be.containDeep({
+                data!.should.be.containDeep({
                     parentId: 1
                 });
             });
@@ -192,7 +192,20 @@ describe("defineActionGroup", () => {
 
                 const data = parent.tryExtractData(action);
 
-                data.should.be.containDeep({ parentId: 555 });
+                data!.should.be.containDeep({ parentId: 555 });
+            });
+
+            it("child should not extract data from actions included in parent", () => {
+                const myAction = defineAction<{ value: number }>("MY ACTION");
+
+                const parent = defineActionGroup<{ parentId: number }>("PARENT").includeAction(myAction.is, a => ({
+                    parentId: a.value
+                }));
+                const child = parent.defineActionGroup<{ childId: number }>("CHILD");
+                const action = myAction({ value: 555 });
+                const data = child.tryExtractData(action);
+
+                equal(data, undefined);
             });
         });
     });
