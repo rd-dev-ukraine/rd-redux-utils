@@ -1,6 +1,6 @@
 import "mocha";
 import "should";
-import { isSubType } from "../src/actionTypeUtils";
+import { isSubType } from "../src/action-utils/actionTypeUtils";
 
 describe("isSubType", () => {
     it("should match on exact match", () => {
