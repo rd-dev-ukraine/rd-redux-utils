@@ -2,11 +2,13 @@
   "name": "rd-redux-utils",
   "version": "1.0.0",
   "description": "A set of redux action and reducer utils powered by typescript",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "test": "mocha --opts tests/mocha.opts",
-    "test:watch": "mocha --watch --opts tests/mocha.opts"
+    "test:watch": "mocha --watch --opts tests/mocha.opts",
+    "golive": "npm run build && npm run test && npm publish"
   },
   "author": "Sergii Tokariev",
   "license": "MIT",
