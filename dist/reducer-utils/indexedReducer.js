@@ -32,6 +32,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @returns Reducer function which applied to an hash of elements.
  */
 function indexedReducer(indexSelector, elementReducer) {
+    if (!indexSelector) {
+        throw new Error("Index selector function is not defined.");
+    }
+    if (!elementReducer) {
+        throw new Error("Element reducer function is not defined.");
+    }
     return function (state, action) {
         if (state === undefined) {
             throw new Error("Undefined state is passed to reducer, expected state to have some default value.");

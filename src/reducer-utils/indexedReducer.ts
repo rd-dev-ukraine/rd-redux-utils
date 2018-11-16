@@ -19,6 +19,12 @@ export function indexedReducer<TState>(
     indexSelector: (action: Action) => IndexElementKeyType | IndexSkipType | IndexApplyToAllElementsType,
     elementReducer: (state: TState | undefined, action: Action, index?: IndexElementKeyType) => TState
 ): Reducer<TState[]> {
+    if (!indexSelector) {
+        throw new Error("Index selector function is not defined.");
+    }
+    if (!elementReducer) {
+        throw new Error("Element reducer function is not defined.");
+    }
     return (state: TState[] | undefined, action: Action): TState[] => {
         if (state === undefined) {
             throw new Error("Undefined state is passed to reducer, expected state to have some default value.");

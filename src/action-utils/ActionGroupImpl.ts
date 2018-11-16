@@ -1,8 +1,9 @@
 import { ActionGroup } from "./ActionGroup";
-import { Action } from "redux";
+import { Action, Reducer } from "redux";
 
 import { defineActionCore, ActionCreatorFn } from "./defineAction";
 import { validateActionType, composeActionType, isSubType } from "./actionTypeUtils";
+import { StateHash, hashedReducer, indexedReducer } from "../reducer-utils";
 
 export class ActionGroupImpl<TCommonProps, TExtraActions extends Action>
     implements ActionGroup<TCommonProps, TExtraActions> {
@@ -38,27 +39,15 @@ export class ActionGroupImpl<TCommonProps, TExtraActions extends Action>
     };
 
     tryExtractData = (action?: Action): TCommonProps | undefined => {
-        if (!action || !action.type) {
+        const result = this.extractDataCore(action);
+
+        // Result is undefined if common data can't be extracted from the action
+        // Result is true when action has no common data but should be processed by group reducers.
+        if (result === undefined || result === true) {
             return undefined;
         }
 
-        if (this.isOwnAction(action)) {
-            return action;
-        }
-
-        const extractor = this.includedActions.filter(a => a.test(action))[0];
-        if (extractor) {
-            return (extractor.extractProps(action) as any) as TCommonProps;
-        }
-
-        for (const child of this.childGroups) {
-            const data = child.tryExtractData(action);
-            if (data) {
-                return data;
-            }
-        }
-
-        return undefined;
+        return result;
     };
 
     defineActionGroup = <TNestedProps>(typePrefix: string): ActionGroup<TCommonProps & TNestedProps, TExtraActions> => {
@@ -70,7 +59,7 @@ export class ActionGroupImpl<TCommonProps, TExtraActions extends Action>
 
     includeAction = <TAction extends Action>(
         test: (action: Action) => action is TAction,
-        extractProps: (action: TAction) => TCommonProps
+        extractProps: (action: TAction) => TCommonProps | true
     ): ActionGroup<TCommonProps, TExtraActions | TAction> => {
         if (!test) {
             throw new Error("Test method is not defined.");
@@ -87,6 +76,46 @@ export class ActionGroupImpl<TCommonProps, TExtraActions extends Action>
         return this;
     };
 
+    hashedReducer = <TState>(
+        keySelector: (props: TCommonProps) => string,
+        elementReducer: Reducer<TState>
+    ): Reducer<StateHash<TState>> => {
+        if (!keySelector) {
+            throw new Error("Key selector function is not defined.");
+        }
+        if (!elementReducer) {
+            throw new Error("Element reducer function is not defined.");
+        }
+
+        return hashedReducer(action => {
+            const data = this.extractDataCore(action);
+            if (data === undefined || data === true) {
+                return data;
+            }
+            return keySelector(data);
+        }, elementReducer);
+    };
+
+    indexedReducer = <TState>(
+        indexSelector: (props: TCommonProps) => number,
+        elementReducer: Reducer<TState>
+    ): Reducer<TState[]> => {
+        if (!indexSelector) {
+            throw new Error("Index selector function is not defined.");
+        }
+        if (!elementReducer) {
+            throw new Error("Element reducer function is not defined.");
+        }
+
+        return indexedReducer(action => {
+            const data = this.extractDataCore(action);
+            if (data === undefined || data === true) {
+                return data;
+            }
+            return indexSelector(data);
+        }, elementReducer);
+    };
+
     private isOwnAction = (action?: Action): action is TCommonProps & Action => {
         if (!action || !action.type) {
             return false;
@@ -97,6 +126,30 @@ export class ActionGroupImpl<TCommonProps, TExtraActions extends Action>
         }
 
         return false;
+    };
+
+    private extractDataCore = (action?: Action): TCommonProps | undefined | true => {
+        if (!action || !action.type) {
+            return undefined;
+        }
+
+        if (this.isOwnAction(action)) {
+            return action;
+        }
+
+        const extractor = this.includedActions.filter(a => a.test(action))[0];
+        if (extractor) {
+            return (extractor.extractProps(action) as any) as TCommonProps | true;
+        }
+
+        for (const child of this.childGroups) {
+            const data = (child as ActionGroupImpl<any, any>).extractDataCore(action);
+            if (data) {
+                return data;
+            }
+        }
+
+        return undefined;
     };
 }
 

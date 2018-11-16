@@ -23,6 +23,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @returns Reducer function which applied to an hash of elements.
  */
 function hashedReducer(keySelector, elementReducer) {
+    if (!keySelector) {
+        throw new Error("Key selector function is not defined.");
+    }
+    if (!elementReducer) {
+        throw new Error("Element reducer function is not defined.");
+    }
     return function (state, action) {
         var _a;
         if (state === undefined) {

@@ -1,5 +1,6 @@
-import { Action } from "redux";
+import { Action, Reducer } from "redux";
 import { ActionCreatorFn } from "./defineAction";
+import { StateHash } from "reducer-utils";
 
 /**
  * Action group creates a factory which allows
@@ -35,6 +36,19 @@ export interface ActionGroup<TCommonProps, TExtraActions extends Action = never>
      */
     includeAction<TAction extends Action>(
         test: (action: Action) => action is TAction,
-        extractProps: (action: TAction) => TCommonProps
+        extractProps: (action: TAction) => TCommonProps | true
     ): ActionGroup<TCommonProps, TExtraActions | TAction>;
+
+    /**
+     * Creates a hash reducer function which processes the actions of this group and subgroups.
+     */
+    hashedReducer<TState>(
+        keySelector: (props: TCommonProps) => string,
+        elementReducer: Reducer<TState>
+    ): Reducer<StateHash<TState>>;
+
+    indexedReducer<TState>(
+        indexSelector: (props: TCommonProps) => number,
+        elementReducer: Reducer<TState>
+    ): Reducer<TState[]>;
 }

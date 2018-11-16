@@ -19,6 +19,13 @@ export function hashedReducer<TState>(
     keySelector: (action: Action) => HashElementKeyType | HashSkipType | HashApplyToAllElementsType,
     elementReducer: (state: TState | undefined, action: Action, key?: HashElementKeyType) => TState
 ): Reducer<StateHash<TState>> {
+    if (!keySelector) {
+        throw new Error("Key selector function is not defined.");
+    }
+    if (!elementReducer) {
+        throw new Error("Element reducer function is not defined.");
+    }
+
     return (state: StateHash<TState> | undefined, action: Action): StateHash<TState> => {
         if (state === undefined) {
             throw new Error("Undefined state is passed to reducer, expected state to have some default value.");

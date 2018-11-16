@@ -1,6 +1,7 @@
 import { ActionGroup } from "./ActionGroup";
-import { Action } from "redux";
+import { Action, Reducer } from "redux";
 import { ActionCreatorFn } from "./defineAction";
+import { StateHash } from "../reducer-utils";
 export declare class ActionGroupImpl<TCommonProps, TExtraActions extends Action> implements ActionGroup<TCommonProps, TExtraActions> {
     readonly typePrefix: string;
     private includedActions;
@@ -12,7 +13,10 @@ export declare class ActionGroupImpl<TCommonProps, TExtraActions extends Action>
     isExactlyGroupAction: (action?: Action<any> | undefined) => action is TExtraActions | (TCommonProps & Action<any>);
     tryExtractData: (action?: Action<any> | undefined) => TCommonProps | undefined;
     defineActionGroup: <TNestedProps>(typePrefix: string) => ActionGroup<TCommonProps & TNestedProps, TExtraActions>;
-    includeAction: <TAction extends Action<any>>(test: (action: Action<any>) => action is TAction, extractProps: (action: TAction) => TCommonProps) => ActionGroup<TCommonProps, TExtraActions | TAction>;
+    includeAction: <TAction extends Action<any>>(test: (action: Action<any>) => action is TAction, extractProps: (action: TAction) => true | TCommonProps) => ActionGroup<TCommonProps, TExtraActions | TAction>;
+    hashedReducer: <TState>(keySelector: (props: TCommonProps) => string, elementReducer: Reducer<TState, import("redux").AnyAction>) => Reducer<StateHash<TState>, import("redux").AnyAction>;
+    indexedReducer: <TState>(indexSelector: (props: TCommonProps) => number, elementReducer: Reducer<TState, import("redux").AnyAction>) => Reducer<TState[], import("redux").AnyAction>;
     private isOwnAction;
+    private extractDataCore;
 }
 //# sourceMappingURL=ActionGroupImpl.d.ts.map
