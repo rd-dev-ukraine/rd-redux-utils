@@ -39,6 +39,7 @@ function indexedReducer(indexSelector, elementReducer) {
         throw new Error("Element reducer function is not defined.");
     }
     return function (state, action) {
+        if (state === void 0) { state = []; }
         if (state === undefined) {
             throw new Error("Undefined state is passed to reducer, expected state to have some default value.");
         }

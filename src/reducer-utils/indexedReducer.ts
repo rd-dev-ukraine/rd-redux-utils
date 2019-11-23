@@ -25,7 +25,7 @@ export function indexedReducer<TState>(
     if (!elementReducer) {
         throw new Error("Element reducer function is not defined.");
     }
-    return (state: TState[] | undefined, action: Action): TState[] => {
+    return (state: TState[] | undefined = [], action: Action): TState[] => {
         if (state === undefined) {
             throw new Error("Undefined state is passed to reducer, expected state to have some default value.");
         }

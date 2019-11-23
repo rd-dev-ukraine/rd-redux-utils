@@ -30,6 +30,7 @@ function hashedReducer(keySelector, elementReducer) {
         throw new Error("Element reducer function is not defined.");
     }
     return function (state, action) {
+        if (state === void 0) { state = {}; }
         var _a;
         if (state === undefined) {
             throw new Error("Undefined state is passed to reducer, expected state to have some default value.");

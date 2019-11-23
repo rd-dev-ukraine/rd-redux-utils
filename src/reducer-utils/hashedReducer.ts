@@ -26,7 +26,7 @@ export function hashedReducer<TState>(
         throw new Error("Element reducer function is not defined.");
     }
 
-    return (state: StateHash<TState> | undefined, action: Action): StateHash<TState> => {
+    return (state: StateHash<TState> | undefined = {}, action: Action): StateHash<TState> => {
         if (state === undefined) {
             throw new Error("Undefined state is passed to reducer, expected state to have some default value.");
         }
