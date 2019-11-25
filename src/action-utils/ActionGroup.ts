@@ -1,6 +1,6 @@
 import { Action, Reducer } from "redux";
 import { ActionCreatorFn } from "./defineAction";
-import { StateHash } from "reducer-utils";
+import { StateHash } from "../reducer-utils";
 
 /**
  * Action group creates a factory which allows
