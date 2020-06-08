@@ -21,6 +21,8 @@ export interface ActionCreatorFn<TActionData> {
     readonly typeOf: {
         /** typeof returns a type of the action produced by the action creator. */
         readonly action: TActionData & Action;
+        /** typeof returns a payload type for the action. */
+        readonly payload: TActionData;
     };
 }
 
