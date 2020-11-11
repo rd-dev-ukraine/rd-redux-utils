@@ -68,10 +68,7 @@ export class ActionGroupImpl<TCommonProps, TExtraActions extends Action>
             throw new Error("Extract props method is not defined");
         }
 
-        this.includedActions.push({
-            test,
-            extractProps
-        } as any);
+        this.includedActions.push({ test, extractProps } as any);
 
         return this;
     };
@@ -94,6 +91,34 @@ export class ActionGroupImpl<TCommonProps, TExtraActions extends Action>
             }
             return keySelector(data);
         }, elementReducer);
+    };
+
+    hashedReducerWithSelector = <TState>(
+        keySelector: (props: TCommonProps) => string,
+        elementReducer: Reducer<TState>
+    ): {
+        reducer: Reducer<StateHash<TState>>;
+        selector: (state: StateHash<TState>, params: TCommonProps) => TState | undefined;
+    } => {
+        if (!keySelector) {
+            throw new Error("Key selector function is not defined.");
+        }
+        if (!elementReducer) {
+            throw new Error("Element reducer function is not defined.");
+        }
+
+        return {
+            reducer: this.hashedReducer(keySelector, elementReducer),
+            selector: (state: StateHash<TState>, params: TCommonProps) => {
+                if (!state) {
+                    return undefined;
+                }
+
+                const key = keySelector(params);
+
+                return state[key];
+            }
+        };
     };
 
     indexedReducer = <TState>(

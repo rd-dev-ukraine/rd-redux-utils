@@ -58,10 +58,7 @@ var ActionGroupImpl = /** @class */ (function () {
             if (!extractProps) {
                 throw new Error("Extract props method is not defined");
             }
-            _this.includedActions.push({
-                test: test,
-                extractProps: extractProps
-            });
+            _this.includedActions.push({ test: test, extractProps: extractProps });
             return _this;
         };
         this.hashedReducer = function (keySelector, elementReducer) {
@@ -78,6 +75,24 @@ var ActionGroupImpl = /** @class */ (function () {
                 }
                 return keySelector(data);
             }, elementReducer);
+        };
+        this.hashedReducerWithSelector = function (keySelector, elementReducer) {
+            if (!keySelector) {
+                throw new Error("Key selector function is not defined.");
+            }
+            if (!elementReducer) {
+                throw new Error("Element reducer function is not defined.");
+            }
+            return {
+                reducer: _this.hashedReducer(keySelector, elementReducer),
+                selector: function (state, params) {
+                    if (!state) {
+                        return undefined;
+                    }
+                    var key = keySelector(params);
+                    return state[key];
+                }
+            };
         };
         this.indexedReducer = function (indexSelector, elementReducer) {
             if (!indexSelector) {

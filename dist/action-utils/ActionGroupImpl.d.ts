@@ -15,6 +15,10 @@ export declare class ActionGroupImpl<TCommonProps, TExtraActions extends Action>
     defineActionGroup: <TNestedProps>(typePrefix: string) => ActionGroup<TCommonProps & TNestedProps, TExtraActions>;
     includeAction: <TAction extends Action<any>>(test: (action: Action<any>) => action is TAction, extractProps: (action: TAction) => true | TCommonProps) => ActionGroup<TCommonProps, TExtraActions | TAction>;
     hashedReducer: <TState>(keySelector: (props: TCommonProps) => string, elementReducer: Reducer<TState, import("redux").AnyAction>) => Reducer<StateHash<TState>, import("redux").AnyAction>;
+    hashedReducerWithSelector: <TState>(keySelector: (props: TCommonProps) => string, elementReducer: Reducer<TState, import("redux").AnyAction>) => {
+        reducer: Reducer<StateHash<TState>, import("redux").AnyAction>;
+        selector: (state: StateHash<TState>, params: TCommonProps) => TState | undefined;
+    };
     indexedReducer: <TState>(indexSelector: (props: TCommonProps) => number, elementReducer: Reducer<TState, import("redux").AnyAction>) => Reducer<TState[], import("redux").AnyAction>;
     private isOwnAction;
     private extractDataCore;

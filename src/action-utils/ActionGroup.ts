@@ -47,6 +47,14 @@ export interface ActionGroup<TCommonProps, TExtraActions extends Action = never>
         elementReducer: Reducer<TState>
     ): Reducer<StateHash<TState>>;
 
+    hashedReducerWithSelector<TState>(
+        keySelector: (props: TCommonProps) => string,
+        elementReducer: Reducer<TState>
+    ): {
+        reducer: Reducer<StateHash<TState>>;
+        selector: (state: StateHash<TState>, params: TCommonProps) => TState | undefined;
+    };
+
     indexedReducer<TState>(
         indexSelector: (props: TCommonProps) => number,
         elementReducer: Reducer<TState>
